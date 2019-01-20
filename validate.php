@@ -9,24 +9,32 @@ $name = $email = $gender = $comment = $website = "";
 $eerror = $eemail="";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  if(empty($_POST["name"])){
-    $eerror="can't be empty";
+  if (empty($_POST["name"])) {
+    $nameErr = "Name is required";
+  } else {
+    $name = test_input($_POST["name"]);
+    if (!preg_match("/^[a-zA-Z ]*$/",$name)) {
+      $eerror = "Only letters and white space allowed"; 
+    }
   }
-  else{
-  $name = test_input($_POST["name"]);
-  }
-  if(empty($_POST["email"])){
-    $eemail="u can't give empty email";
-  }
-  else{
+  
+  if (empty($_POST["email"])) {
+    $eemail = "Email is required";
+  } else {
     $email = test_input($_POST["email"]);
-    if (!strpos($email, '@')) {
-      $eemail="Not a valid email";
-      $email=" ";
-      reload();
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      $eemail = "Invalid email format"; 
+    }
   }
+    
+  if (empty($_POST["website"])) {
+    $website = "";
+  } else {
+    $website = test_input($_POST["website"]);
+    if (!preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i",$website)) {
+      $ewebsite = "Invalid URL"; 
+    }
   }
-  $website = test_input($_POST["website"]);
   $comment = test_input($_POST["comment"]);
   $gender = test_input($_POST["gender"]);
 }
@@ -50,7 +58,7 @@ function test_input($anand) {
   <br><br>
   E-mail: <input type="text" name="email"><span> <?php echo $eemail;?></span>
   <br><br>
-  Website: <input type="text" name="website">
+  Website: <input type="text" name="website"><?php echo $ewebsite;?></span>
   <br><br>
   Comment: <textarea name="comment" rows="5" cols="40"></textarea>
   <br><br>
