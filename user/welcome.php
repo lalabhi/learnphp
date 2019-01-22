@@ -1,3 +1,12 @@
+<?php
+    include("session.php");
+
+    if(!isset($login_session))
+{
+    echo"Not authorised please login" .'<a  href="login.php">here</a>';
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +16,6 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>hii</h1>
+<h1>Welcome <?php echo $login_session; ?></h1>
 </body>
 </html>

@@ -28,6 +28,7 @@
 </html>
 <?php
 include("config.php");
+session_start();
 class user{
     
     public function login(){
@@ -50,10 +51,11 @@ class user{
             $active=$row['active'];
             $count=mysqli_num_rows($result);
             if($count==1)
-            {
+            {   
+                echo"done";
                 $_SESSION['login_user'] = $emailusername;
                 header("location: welcome.php");
-                echo"done";
+                
             }
             else 
             {
