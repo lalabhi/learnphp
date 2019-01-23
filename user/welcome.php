@@ -1,11 +1,5 @@
 <?php
-    include("session.php");
-
-    if(!isset($login_session))
-{
-    echo"Not authorised please login" .'<a  href="login.php">here</a>';
-    exit();
-}
+include("session.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,5 +11,6 @@
 </head>
 <body>
 <h1>Welcome <?php echo $login_session; ?></h1>
+<a href="logout.php">logout</a>
 </body>
 </html>

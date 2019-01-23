@@ -1,4 +1,13 @@
-
+<?php
+session_start();
+$msg=0;
+$user_check = $_SESSION['login_user'];
+if($user_check)
+{
+    echo"already logged in".'<a  href="welcome.php"> go to ur site</a>'. $user_check ;
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,48 +33,26 @@
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
 </div>
+<?php if(isset($_GET['msg']) && $_GET['msg']== FALSE)
+              echo '<div class="alert alert-danger">Wrong username or password </div>';
+              ?>
 </body>
 </html>
+
 <?php
-include("config.php");
-session_start();
-class user{
-    
-    public function login(){
-
-        $obj = new DbConnect();
-        $conn= $obj->DbConn('localhost', 'root', 'root', 'loginapp');
-        //print_r($conn);
-        if($_SERVER["REQUEST_METHOD"] == "POST"){
-            print_r($conn);
-            
-            $emailusername = mysqli_real_escape_string($conn,$_POST['Email']); 
-            $password = mysqli_real_escape_string($conn,$_POST['Password']); 
-
-           
-            $sql="SELECT * FROM details WHERE email = '$emailusername' and pword='$password'";
-            
-            $result=mysqli_query($conn,$sql);
-            
-            $row=mysqli_fetch_array($result,MYSQLI_ASSOC);
-            $active=$row['active'];
-            $count=mysqli_num_rows($result);
-            if($count==1)
-            {   
-                echo"done";
-                $_SESSION['login_user'] = $emailusername;
-                header("location: welcome.php");
-                
-            }
-            else 
-            {
-                $error="Your Login Name or Password is invalid";
-                echo"Invalid username or password";
-            }
-        }
+include("User.php");
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+    $email = $_POST['Email'];
+    $password = $_POST['Password'];
+    $obj2 = new User();
+    $msg=$obj2->login($email, $password);
+    if($msg){
+        $_SESSION['login_user'] = $msg;
+        header("location: welcome.php");
+    }
+    else{
+        header("Location:http://localhost:8888/user/login.php?msg=FALSE");
     }
 }
-$obj2 = new user();
-$obj2->login();
 
 ?>

@@ -7,22 +7,22 @@ class DbConnect{
     protected $password = null;
     public $conn;
     
-    public function DbConn($host, $user, $password, $dbname){
+     function __construct(){
 
-        $this->host = $host;
-        $this->urname= $user;
-        $this->password= $password;
-        $this->dbname = $dbname;
+        $this->host = 'localhost';
+        $this->urname= 'root';
+        $this->password= 'root';
+        $this->dbname = 'loginapp';
         $this->conn = mysqli_connect($this->host,$this->urname,$this->password, $this->dbname);
 
         if (!$this->conn) {
             die("Connection failed: " . mysqli_connect_error());
         }
         else{
-            echo "Connected successfully to server";
+            //echo "Connected successfully to server";
         }
-        
         return($this->conn);
         }
+    
 }
 ?>
