@@ -1,5 +1,8 @@
 <?php
-include("session.php");
+spl_autoload_register(function ($class_name) {
+    include $class_name . '.php';
+});
+$obj= new session();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -10,7 +13,7 @@ include("session.php");
     <title>Document</title>
 </head>
 <body>
-<h1>Welcome <?php echo $login_session; ?></h1>
+<h1>Welcome <?php echo $_SESSION['uname']; ?></h1>
 <a href="logout.php">logout</a>
 </body>
 </html>

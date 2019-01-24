@@ -1,4 +1,7 @@
 <?php
+spl_autoload_register(function ($class_name) {
+       include $class_name . '.php';
+});
 session_start();
 $msg=0;
 $user_check = $_SESSION['login_user'];
@@ -40,7 +43,6 @@ if($user_check)
 </html>
 
 <?php
-include("User.php");
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $email = $_POST['Email'];
     $password = $_POST['Password'];

@@ -1,5 +1,7 @@
 <?php
-include("config.php");
+spl_autoload_register(function ($class_name) {
+  include $class_name . '.php';
+});
 //error_reporting(E_ALL); ini_set('display_errors', 1);
 class User{
     
@@ -36,7 +38,8 @@ class User{
         $no_rows = mysqli_num_rows($register_user);
 
     if($no_rows == 0)
-    {
+    { 
+        $hash = md5( rand(0,1000) );
         $sql2 = "INSERT INTO details(fname, pword, email, phoneno) values ('$fname', '$password', '$email', '$phoneno')";
         $result = mysqli_query($conn, $sql2) or die(mysqli_error($sql2));
         $msg = 1;
