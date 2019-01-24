@@ -40,9 +40,10 @@ class User{
     if($no_rows == 0)
     { 
         $hash = md5( rand(0,1000) );
-        $sql2 = "INSERT INTO details(fname, pword, email, phoneno) values ('$fname', '$password', '$email', '$phoneno')";
+        $sql2 = "INSERT INTO details(fname, pword, email, phoneno, fhash) values ('$fname', '$password', '$email', '$phoneno', '$hash')";
         $result = mysqli_query($conn, $sql2) or die(mysqli_error($sql2));
         $msg = 1;
+        $this->verify($email, $hash);
         header("Location:http://localhost:8888/user/signup.php?msg=$msg");//$msg=1 if data is entered  
     }
     else{
@@ -51,6 +52,27 @@ class User{
         
     }
     
+}
+function verify($email, $hash){
+  $to      = $email; // Send email to our user
+  $subject = 'Signup | Verification'; // Give the email a subject 
+  $message = '
+  
+  Thanks for signing up!
+  Your account has been created, you can login with the following credentials after you have activated your account by pressing the url below.
+  
+  ------------------------
+  Username: '.$name.'
+  Password: '.$password.'
+  ------------------------
+  
+  Please click this link to activate your account:
+  http://localhost:8888/user/verify.php?email='.$email.'&hash='.$hash.'
+  
+  '; // Our message above including the link
+                      
+  $headers = 'From:noreply@newsite.com' . "\r\n"; // Set from headers
+  mail($to, $subject, $message, $headers); // Send our email
 }
 }
 

@@ -38,7 +38,7 @@ if($user_check)
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
         
         <?php if($_GET['msg']==1)
-            echo '<div class="alert alert-success">Registered Successfully!!</div>';
+            echo '<div class="alert alert-success">Registered Successfully!! Please verify your email</div>';
               else if($_GET['msg']==2)
               echo '<div class="alert alert-danger">Registered Unsuccessfully!!</div>';
               ?>
