@@ -38,8 +38,10 @@ if($user_check)
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
 </div>
-<?php if(isset($_GET['msg']) && $_GET['msg']== FALSE)
+<?php if(isset($_GET['msg']) && $_GET['msg']== "invalid")
               echo '<div class="alert alert-danger">Wrong username or password </div>';
+      else if(isset($_GET['msg']) && $_GET['msg']== "Unverified")
+              echo '<div class="alert alert-danger">Please verify your email </div>';
               ?>
 </body>
 </html>
@@ -65,11 +67,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $obj2 = new User();
     $msg=$obj2->login($email, $password);
     if($msg){
-        $_SESSION['login_user'] = $msg;
-        header("location: welcome.php");
+        $msg=$obj2->checkactive($email);
+        if($msg){
+            $_SESSION['login_user'] = $msg;
+            header("location: welcome.php");
+        }
+        
     }
     else{
-        header("Location:http://localhost:8888/user/login.php?msg=FALSE");
+        $msg="invalid";
+        header("Location:http://localhost:8888/user/login.php?msg=$msg");
     }
 }
 
