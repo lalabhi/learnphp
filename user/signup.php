@@ -1,8 +1,13 @@
 <?php
+require 'vendor/autoload.php';
+
+use Page\User;
+error_reporting(E_ALL); ini_set('display_errors', 1);
+
 session_start();
-spl_autoload_register(function ($class_name) {
-    include $class_name . '.php';
-});
+// spl_autoload_register(function ($class_name) {
+//     include $class_name . '.php';
+// });
 $user_check = $_SESSION['login_user'];
 if($user_check)
 {
@@ -51,7 +56,7 @@ if($user_check)
 </html>
 
 <?php
-include("User.php");
+//include("User.php");
 if ($_SERVER["REQUEST_METHOD"] == "POST") 
     {   
         $fname= $_POST['fname'];
@@ -59,6 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         $pass=$_POST['Password'];
         $phone=$_POST['phoneno'];
         $obj2 = new User();
+        echo"hello";
         $obj2->register($fname, $email, $pass, $phone);
     }
 

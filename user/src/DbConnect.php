@@ -1,5 +1,6 @@
 <?php 
 
+namespace Page;
 class DbConnect{
     protected $host = null;
     protected $dbname = null;

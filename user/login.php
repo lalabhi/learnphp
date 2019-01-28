@@ -1,7 +1,12 @@
 <?php
-spl_autoload_register(function ($class_name) {
-       include $class_name . '.php';
-});
+require 'vendor/autoload.php';
+
+use Page\User;
+
+error_reporting(E_ALL); ini_set('display_errors', 1);
+// spl_autoload_register(function ($class_name) {
+//        include $class_name . '.php';
+// });
 session_start();
 $msg=0;
 $user_check = $_SESSION['login_user'];

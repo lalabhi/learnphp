@@ -1,8 +1,12 @@
 <?php
+namespace Page;
 error_reporting(E_ALL); ini_set('display_errors', 1);
-spl_autoload_register(function ($class_name) {
-       include $class_name . '.php';
-});
+
+// spl_autoload_register(function ($class_name) {
+//         include $class_name . '.php';
+//  });
+//  error_reporting(E_ALL); ini_set('display_errors', 1);
+
    class session{
       function __construct(){
 

@@ -7,13 +7,26 @@ namespace Composer\Autoload;
 class ComposerStaticInit17ee0c91c47b1c2c2e3ff28a726b25ab
 {
     public static $prefixLengthsPsr4 = array (
+        'R' => 
+        array (
+            'Rivsen\\Demo\\' => 12,
+        ),
         'P' => 
         array (
+            'Page\\' => 5,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'Rivsen\\Demo\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/rivsen/hello-world/src',
+        ),
+        'Page\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
+        ),
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',

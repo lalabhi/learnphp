@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d67203b6e9fc952ae681c538683a497",
+    "content-hash": "7649d45e9247413286724903827128ec",
     "packages": [
         {
             "name": "phpmailer/phpmailer",
@@ -71,6 +71,39 @@
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "time": "2018-11-16T00:41:32+00:00"
+        },
+        {
+            "name": "rivsen/hello-world",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Rivsen/hello-world.git",
+                "reference": "6543d715e24c771a77f073ee08185e6dd657fd0a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Rivsen/hello-world/zipball/6543d715e24c771a77f073ee08185e6dd657fd0a",
+                "reference": "6543d715e24c771a77f073ee08185e6dd657fd0a",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Rivsen\\Demo\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rivsen Tan",
+                    "email": "rivsen1003@gmail.com"
+                }
+            ],
+            "description": "this is a hello world repo for composer.",
+            "time": "2015-03-14T10:26:02+00:00"
         }
     ],
     "packages-dev": [],
