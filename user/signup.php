@@ -2,14 +2,16 @@
 require 'vendor/autoload.php';
 
 use Page\User;
-error_reporting(E_ALL); ini_set('display_errors', 1);
+//error_reporting(E_ALL); ini_set('display_errors', 1);
 
 session_start();
 // spl_autoload_register(function ($class_name) {
 //     include $class_name . '.php';
 // });
 $user_check = $_SESSION['login_user'];
-if($user_check)
+$obj2 = new User();
+$check = $obj2->checkadmin($_SESSION['login_user']);
+if($user_check && !$check)
 {
     echo"already logged in".'<a  href="welcome.php"> go to ur site</a>'. $user_check ;
     exit();
@@ -31,7 +33,11 @@ if($user_check)
 <body>
 <div class="container">
 <form class="form-signup" action="signup.php" method="POST">
-        <h2 class="form-signin-heading">Sign up</h2>
+        <?php if($check) {?>
+            <h2 class="form-signin-heading">Add new user</h2>
+        <?php } else {?>
+            <h2 class="form-signin-heading">Sign up</h2>
+        <?php }?>
         <label for="inputName" class="sr-only">Name</label>
         <input type="fname" name="fname" class="form-control" placeholder="Full Name" required >
         <label for="inputEmail" class="sr-only">Email address</label>
@@ -40,15 +46,30 @@ if($user_check)
         <input type="password" name="Password" class="form-control" placeholder="Password" required>
         <label for="mobilenumber" class="sr-only">Phone Number</label>
         <input type="number" name="phoneno" class="form-control" placeholder="Phone Number" required>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+        <?php if($check) {?>
+        <label for="mobilenumber" class="sr-only">Role</label>
+        <select class="form-control" name="roles">
+        <option value="Admin">Admin</option>
+        <option value="Member">Member</option>
+        <option value="contentwriter">contentwriter</option>
+        </select>        <?php }?>
+
+        <?php if($check) {?>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Add User</button>
+        <?php } else {?>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+        <?php }?>
         
         <?php if($_GET['msg']==1)
             echo '<div class="alert alert-success">Registered Successfully!! Please verify your email</div>';
               else if($_GET['msg']==2)
               echo '<div class="alert alert-danger">Registered Unsuccessfully!!</div>';
+              else if($_GET['msg']==3)
+              echo '<div class="alert alert-success">successful!!</div>';
               ?>
-        
+        <?php if(!$check) {?>
         <a href="login.php"> already have account?</a>
+        <?php } ?>
       </form>
 </div>
     
@@ -63,9 +84,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         $email=$_POST['Email'];
         $pass=$_POST['Password'];
         $phone=$_POST['phoneno'];
+        if($check){
+
+        }
+        else{
+        $active = '0';
+        }
         $obj2 = new User();
-        echo"hello";
-        $obj2->register($fname, $email, $pass, $phone);
+        //echo"hello";
+        //echo $check;
+        if($check){
+            $active='1';
+        }
+        echo $active;
+        $obj2->register($fname, $email, $pass, $phone, $active);
     }
 
 ?>

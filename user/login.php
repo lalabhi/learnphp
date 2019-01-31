@@ -74,7 +74,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if($msg){
         $msg=$obj2->checkactive($email);
         if($msg){
-            $_SESSION['login_user'] = $msg;
+            $_SESSION['login_user'] = $email;
             header("location: welcome.php");
         }
         
