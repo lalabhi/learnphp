@@ -192,7 +192,13 @@ function showalldata(){
     $conn= $db->conn;
     $sql="SELECT * FROM details";
     $result=mysqli_query($conn,$sql);
-    //$row = mysql_fetch_array( $result );
+    return $result;
+}
+function showroledata($role){
+    $db= new DbConnect();
+    $conn= $db->conn;
+    $sql="SELECT * FROM details WHERE roles='$role'";
+    $result=mysqli_query($conn,$sql);
     return $result;
 }
 function showdatauid($uid){

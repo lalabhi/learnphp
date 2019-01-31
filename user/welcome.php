@@ -50,9 +50,9 @@ if($check){
 ?>
 <!--deleting the user-->
 <?php 
-    if ($_SERVER["REQUEST_METHOD"] == "POST"){
+    if (isset($_POST['Email'])){
+        if($_POST['Email']){
         $email = $_POST['Email'];
-
         $val=$obj2->deleteusr($email);
         if($val){
             echo '<div class="alert alert-success">'.$email.' deleted </div>';
@@ -60,22 +60,34 @@ if($check){
         else{
             echo '<div class="alert alert-danger">'.$email. 'not found </div>';
         }
+    }
     } 
 
 
 ?>
-
-
-
-
-
+<!-- filtering Part-->
+<div class="container">
+<form class="checkbox" method ="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+  <input type="radio" name="filter" value="#" >Show All<br>
+  <input type="radio" name="filter" value="admin"> Show Admin<br>
+  <input type="radio" name="filter" value="member"> Show members  
+  <br><button class="btn btn-info">showdata</button>
+</form> 
+</div>
 <?php 
 if($check){
-// $db= new DbConnect();
-// $conn= $db->conn;
-// $sql="SELECT * FROM details";
-// $result=mysqli_query($conn,$sql);
-$result = $obj2->showalldata();
+    if(isset($_POST['filter'])){
+    if($_POST['filter'] == 'admin') {
+        $result = $obj2->showroledata($_POST['filter']);
+    }
+    else if($_POST['filter'] == 'member') {
+        $result = $obj2->showroledata($_POST['filter']);
+    }
+    else{
+        $result = $obj2->showalldata();   
+    }
+}
+if(isset($result)){
 echo"<br> <br> <br>";
 echo'<div class="container">';
 echo '<table  class="table table-striped">';
@@ -113,6 +125,7 @@ while($row = mysqli_fetch_array( $result )) {
     
     echo "</table>";
     echo "</div>";
+}
 }
     ?>
 </body>
