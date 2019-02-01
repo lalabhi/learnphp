@@ -2,12 +2,9 @@
 namespace Page;
 error_reporting(E_ALL); ini_set('display_errors', 1);
 
-// spl_autoload_register(function ($class_name) {
-//         include $class_name . '.php';
-//  });
-//  error_reporting(E_ALL); ini_set('display_errors', 1);
 
    class session{
+      //this will sets the username of the person.
       function __construct(){
 
          session_start();

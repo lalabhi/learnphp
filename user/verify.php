@@ -32,7 +32,7 @@ error_reporting(E_ALL); ini_set('display_errors', 1);
             // Verify data
             $email = mysqli_real_escape_string($conn,$_GET['email']); // Set email variable
             $hash = mysqli_real_escape_string($conn,$_GET['hash']); // Set hash variable
-            $sql="SELECT email, fhash, active FROM details WHERE email = '$email' and fhash='$hash' and active='0'";
+            $sql="SELECT email, fhash, active FROM details WHERE email = '$email' and fhash='$hash' and active='0'";//checking if it is same
             $result=mysqli_query($conn,$sql);
             $row=mysqli_fetch_array($result,MYSQLI_ASSOC);
             if(mysqli_num_rows($result)) {  

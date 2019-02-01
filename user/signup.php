@@ -3,16 +3,12 @@ require 'vendor/autoload.php';
 
 use Page\User;
 //error_reporting(E_ALL); ini_set('display_errors', 1);
-
 session_start();
-// spl_autoload_register(function ($class_name) {
-//     include $class_name . '.php';
-// });
 $user_check = $_SESSION['login_user'];
 $obj2 = new User();
-$check = $obj2->checkadmin($_SESSION['login_user']);
+$check = $obj2->checkadmin($_SESSION['login_user']);//returns one if user is a admin
 if($user_check && !$check)
-{
+{   //if a member is logged in then he can't view this page
     echo"already logged in".'<a  href="welcome.php"> go to ur site</a>'. $user_check ;
     exit();
 }
@@ -34,7 +30,7 @@ if($user_check && !$check)
 <div class="container">
 <form class="form-signup" action="signup.php" method="POST">
         <?php if($check) {?>
-            <h2 class="form-signin-heading">Add new user</h2>
+            <h2 class="form-signin-heading">Add new user</h2><!--If admin show this-->
         <?php } else {?>
             <h2 class="form-signin-heading">Sign up</h2>
         <?php }?>
@@ -46,8 +42,9 @@ if($user_check && !$check)
         <input type="password" name="Password" class="form-control" placeholder="Password" required>
         <label for="mobilenumber" class="sr-only">Phone Number</label>
         <input type="number" name="phoneno" class="form-control" placeholder="Phone Number" required>
+        <!--If admin include this too-->
         <?php if($check) {?>
-        <label for="mobilenumber" class="sr-only">Role</label>
+        <label for="role" class="sr-only">Role</label>
         <select class="form-control" name="roles">
         <option value="Admin">Admin</option>
         <option value="Member">Member</option>
@@ -55,11 +52,12 @@ if($user_check && !$check)
         </select>        <?php }?>
 
         <?php if($check) {?>
+        <!--If admin show this-->
             <button class="btn btn-lg btn-primary btn-block" type="submit">Add User</button>
         <?php } else {?>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
         <?php }?>
-        
+        <!--show notifications according to the $msg value which is done in user.php-->
         <?php if($_GET['msg']==1)
             echo '<div class="alert alert-success">Registered Successfully!! Please verify your email</div>';
               else if($_GET['msg']==2)
@@ -68,6 +66,7 @@ if($user_check && !$check)
               echo '<div class="alert alert-success">successful!!</div>';
               ?>
         <?php if(!$check) {?>
+        <!--If not admin show this-->
         <a href="login.php"> already have account?</a>
         <?php } ?>
       </form>
@@ -85,19 +84,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         $pass=$_POST['Password'];
         $phone=$_POST['phoneno'];
         if($check){
-
+        //@var active boolean    
+        $active = '1';//if admin then no email verification.
+        $role = $_POST['roles']; //if admin then get the value of under roles.
         }
         else{
         $active = '0';
+        $role = 'member';
         }
         $obj2 = new User();
-        //echo"hello";
-        //echo $check;
         if($check){
             $active='1';
         }
         echo $active;
-        $obj2->register($fname, $email, $pass, $phone, $active);
+        $obj2->register($fname, $email, $pass, $phone, $active, $role);
     }
 
 ?>

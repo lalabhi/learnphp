@@ -26,17 +26,20 @@ $obj= new session();
 </head>
 <body>
 <h1>Welcome <?php echo $_SESSION['uname']; ?></h1>
+<!-- logout buttton-->
 <a href="logout.php" class="btn btn-info">logout</a> <br/><br/>
 <?php 
 $obj2 = new User();
 $check = $obj2->checkadmin($_SESSION['login_user']);
+//if the user is admin show the below container
 if($check){
  ?>
     <div class="container">
-   <a href="adduser.php" class="btn btn-info" role="button">Add User</a>
-   <button onClick="createDiv()" class="btn btn-danger"> Delete User</button>
+   <a href="adduser.php" class="btn btn-info" role="button">Add User</a><!--addding user-->
+   <button onClick="createDiv()" class="btn btn-danger"> Delete User</button><!--deleting user createDiv(); is a function is js-->
    <div id="getText"  style="display: none;">
    <br/>
+   <!--form for getting the email of the user that the admin wish to delete-->
    <form class="form-signup" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
    <label for="inputEmail" class="sr-only">Email address</label>
         <input style="width:30%; margin-left:30%;" type="email" name="Email" class="form-control" placeholder="Email address" required autofocus>
@@ -75,8 +78,10 @@ if($check){
 </form> 
 </div>
 <?php 
+//checking if user is a admin inorder to proceed with filtering
 if($check){
-    if(isset($_POST['filter'])){
+    //checking if post is happening
+    if(isset($_POST['filter'])){   
     if($_POST['filter'] == 'admin') {
         $result = $obj2->showroledata($_POST['filter']);
     }
@@ -113,7 +118,7 @@ while($row = mysqli_fetch_array( $result )) {
 
     echo '<td>' . $row['roles'] . '</td>';
     
-    echo '<td><a href="edit.php?u_id=' . $row['u_id']. '">Edit</a></td>';
+    echo '<td><a href="edit.php?u_id=' . $row['u_id']. '">Edit</a></td>';//creating the link to edit each and every user
     
     echo "</tr>";
     
@@ -129,6 +134,7 @@ while($row = mysqli_fetch_array( $result )) {
 }
     ?>
 </body>
+<!--function for create the form div for deleting the user-->
 <script>
   function createDiv() {
     var div = document.createElement('div');

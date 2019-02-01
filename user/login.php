@@ -4,9 +4,6 @@ require 'vendor/autoload.php';
 use Page\User;
 
 error_reporting(E_ALL); ini_set('display_errors', 1);
-// spl_autoload_register(function ($class_name) {
-//        include $class_name . '.php';
-// });
 session_start();
 $msg=0;
 $user_check = $_SESSION['login_user'];
@@ -43,15 +40,19 @@ if($user_check)
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
 </div>
-<?php if(isset($_GET['msg']) && $_GET['msg']== "invalid")
+<?php //notification handling for different message
+      if(isset($_GET['msg']) && $_GET['msg']== "invalid")
               echo '<div class="alert alert-danger">Wrong username or password </div>';
-      else if(isset($_GET['msg']) && $_GET['msg']== "Unverified")
+      else if(isset($_GET['msg']) && $_GET['msg']== "Unverified"){
               echo '<div class="alert alert-danger">Please verify your email </div>';
+              session_destroy();
+      }
               ?>
 </body>
 </html>
 
 <?php
+//remember me handling
 if(!empty($_POST["rememberme"])) {
          
     $hour = time() + 3600 * 24 * 30;
@@ -72,6 +73,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $obj2 = new User();
     $msg=$obj2->login($email, $password);
     if($msg){
+        //to check if the user had activated his email
         $msg=$obj2->checkactive($email);
         if($msg){
             $_SESSION['login_user'] = $email;

@@ -5,27 +5,24 @@ use Page\User;
 error_reporting(E_ALL); ini_set('display_errors', 1);
 
 session_start();
-// spl_autoload_register(function ($class_name) {
-//     include $class_name . '.php';
-// });
+
 $user_check = $_SESSION['login_user'];
 $obj2 = new User();
 $check = $obj2->checkadmin($_SESSION['login_user']);
 if(!$check){
-    echo"u are not authorised to this page";
+    echo"u are not authorised to this page";//only admins are allowed to this page
     exit();
 }
+//this will return the data of all the users with that particular id
 if(isset($_GET['u_id'])){
     $result = $obj2->showdatauid($_GET['u_id']);
     $row = mysqli_fetch_array($result);
 }
 else{
+    //give empty if there is no id given in the get
     $row['fname']='';
     $row['email']='';
 }
-echo $row['fname'];
-    echo $row['email'];
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,11 +39,11 @@ echo $row['fname'];
 </head>
 <body>
 <div class="container">
-<form class="form-signup" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+<form class="form-signup" action="<?php echo'edit.php?u_id=' . $row['u_id']. '' ?>" method="POST">
         <h2 class="form-signin-heading">Edit</h2>
         <label for="inputName" class="sr-only">Name</label>
        FirstName
-        <input type="fname" name="fname" class="form-control"  placeholder="Name" value="<?php echo $row['fname'] ?>"required >
+        <input type="fname" name="fname" class="form-control"  placeholder="Name" value="<?php echo $row['fname']//adding the values ?>"required ><!-- shows the value-->
         <label for="inputEmail" class="sr-only">Email address</label>
         Email
         <input type="email" name="Email" class="form-control"  placeholder="Email" value="<?php echo $row['email'] ?>" required>
@@ -75,19 +72,14 @@ echo $row['fname'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") 
     {   
-        //echo"hello";
+        $u_id= $row['u_id'];
         $fname= $_POST['fname'];
         $email= $_POST['Email'];
         $phone=$_POST['phoneno'];
         $roles = $_POST['roles'];
         $active = $_POST['active'];
-
-        print_r($fname);
-        print_r($roles);
-        print_r($active);
-        //print_r($email);
-        //echo $check;
-        $val=$obj2->updateusr($fname, $email, $phone, $roles, $active);
+        
+        $val=$obj2->updateusr($u_id, $fname, $email, $phone, $roles, $active);
         if($val){
         echo '<div class="alert alert-success">Update Successfully!!</div>';
 

@@ -4,11 +4,8 @@ use Page\DbConnect;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-// spl_autoload_register(function ($class_name) {
-//   include $class_name . '.php';
-// });
 error_reporting(E_ALL); ini_set('display_errors', 1);
+//handles the DB quieres and return accordingly 
 class User{
     
   public function login($em, $pass){
@@ -20,14 +17,14 @@ class User{
     $result=mysqli_query($conn,$sql);
     $row=mysqli_fetch_array($result,MYSQLI_ASSOC);
     if(mysqli_num_rows($result)) {  
-        return $emailusername; 
+        return $emailusername; //returns the Email if the account is present.
     }
     else 
     {
         return FALSE;
     }   
   }
-  public function register($fname, $email, $pass, $phone, $active){
+  public function register($fname, $email, $pass, $phone, $active, $role){
     $db= new DbConnect();
     $conn= $db->conn;
     if(isset($login_session))
@@ -44,17 +41,15 @@ class User{
         $no_rows = mysqli_num_rows($register_user);
 
     if($no_rows == 0)
-    {   $role = "member";
+    { 
         $hash = md5( rand(0,1000) );
         $sql3 = 'SELECT * FROM details';
         $result=mysqli_query($conn,$sql3);
         $row=mysqli_fetch_array($result,MYSQLI_ASSOC);
-        if(!$row){
-            $role="admin";
-        }
         $sql2 = "INSERT INTO details(fname, pword, email, phoneno, fhash, roles, active) values ('$fname', '$password', '$email', '$phoneno', '$hash', '$role', '$active')";
         $result = mysqli_query($conn, $sql2) or die(mysqli_error($sql2));
         $msg = 1;
+        //verify if the account is not created by admin user
         if(!$active){
         $this->verify($email, $hash);
         header("Location:http://localhost:8888/user/signup.php?msg=$msg");//$msg=1 if data is entered 
@@ -66,32 +61,35 @@ class User{
     }
     else{
         $msg = 2;
-        header("Location:http://localhost:8888/user/signup.php?msg=$msg");//$msg=0 if not
+        header("Location:http://localhost:8888/user/signup.php?msg=$msg");
         
     }
     
 }
 function verify($email, $hash){
-//   $to      = $email; // Send email to our user
-//   $subject = 'Signup | Verification'; // Give the email a subject 
-//   $message = '
+    //commenting this function inorder to use phpmailer
+    /*
+  //php mail function which works perfectly
+  $to      = $email; // Send email to our user
+  $subject = 'Signup | Verification'; // Give the email a subject 
+  $message = '
   
-//   Thanks for signing up!
-//   Your account has been created, you can login with the following credentials after you have activated your account by pressing the url below.
+  Thanks for signing up!
+  Your account has been created, you can login with the following credentials after you have activated your account by pressing the url below.
   
-//   ------------------------
-//   Username: '.$name.'
-//   Password: '.$password.'
-//   ------------------------
+  ------------------------
+  Username: '.$name.'
+  Password: '.$password.'
+  ------------------------
   
-//   Please click this link to activate your account:
-//   http://localhost:8888/user/verify.php?email='.$email.'&hash='.$hash.'
+  Please click this link to activate your account:
+  http://localhost:8888/user/verify.php?email='.$email.'&hash='.$hash.'
   
-//   '; // Our message above including the link
+  '; // Our message above including the link
                       
-//   $headers = 'From:noreply@newsite.com' . "\r\n"; // Set from headers
-//   mail($to, $subject, $message, $headers); // Send our email
-
+  $headers = 'From:noreply@newsite.com' . "\r\n"; // Set from headers
+  mail($to, $subject, $message, $headers); // Send our email
+*/
 
 //Load Composer's autoloader
 require 'vendor/autoload.php';
@@ -111,14 +109,6 @@ try {
     //Recipients
     $mail->setFrom('abhisheklal997@gmail.com', 'never reply back');
     $mail->addAddress($email);     // Add a recipient
-    // $mail->addAddress('ellen@example.com');               // Name is optional
-    // $mail->addReplyTo('info@example.com', 'Information');
-    // $mail->addCC('cc@example.com');
-    // $mail->addBCC('bcc@example.com');
-
-    //Attachments
-    // $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
-    // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
 
     //Content
     $mail->isHTML(true);                                  // Set email format to HTML
@@ -135,7 +125,6 @@ try {
      http://localhost:8888/user/verify.php?email='.$email.'&hash='.$hash.'
     
      '; // Our message above including the link';
-    //$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
     $mail->send();
     echo 'Message has been sent';
@@ -143,6 +132,7 @@ try {
     echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
 }
 }
+//returns true if the user is active or else sent a msg back to login as unverified
 function checkactive($email){
     $db= new DbConnect();
     $conn= $db->conn;
@@ -160,6 +150,7 @@ function checkactive($email){
     }
 
 }
+//function only returns if the user is admin
 function checkadmin($email){
     $db= new DbConnect();
     $conn= $db->conn;
@@ -169,24 +160,24 @@ function checkadmin($email){
     if($row['roles']=='admin'){
         return TRUE;
     }
-
 }
+//deleting user
 function deleteusr($email) {
     $db= new DbConnect();
     $conn= $db->conn;
-    $sql="SELECT * FROM details WHERE email = '$email'";
+    $sql="SELECT * FROM details WHERE email = '$email'";//check if user is present
     $isuser = mysqli_query($conn,$sql) or die(mysqli_error($sql));
     $no_rows = mysqli_num_rows($isuser);
     if($no_rows == 0){
         return FALSE;
-  
-      }
+    }
       else{
-    $sql="DELETE FROM details WHERE email='$email'";
+    $sql="DELETE FROM details WHERE email='$email'";//deletes the user
     $result=mysqli_query($conn,$sql);
     return TRUE;
       }
 }
+//shows all the data
 function showalldata(){
     $db= new DbConnect();
     $conn= $db->conn;
@@ -194,6 +185,7 @@ function showalldata(){
     $result=mysqli_query($conn,$sql);
     return $result;
 }
+//shows data who has a role
 function showroledata($role){
     $db= new DbConnect();
     $conn= $db->conn;
@@ -201,6 +193,7 @@ function showroledata($role){
     $result=mysqli_query($conn,$sql);
     return $result;
 }
+//shows data with id as parameter
 function showdatauid($uid){
     $db= new DbConnect();
     $conn= $db->conn;
@@ -208,22 +201,16 @@ function showdatauid($uid){
     $result= mysqli_query($conn, $sql);
     return $result;
 }
-function updateusr($fname, $email, $phone, $roles, $active){
+//updates user
+function updateusr($u_id,$fname, $email, $phone, $roles, $active){
     $db= new DbConnect();
     $conn= $db->conn;
     print_r($fname);
-    //echo"hi";
     $sql="UPDATE details
-    SET fname = '$fname', phoneno= '$phone',active='$active',roles='$roles'
-    WHERE email = '$email'";
-    // print_r($sql);
-    // print_r($conn);
+    SET fname = '$fname', phoneno= '$phone',active='$active',roles='$roles',email = '$email'
+    WHERE u_id = '$u_id'";
     $result= mysqli_query($conn, $sql);
-    var_dump($result);
-    echo"hi";
-    
-    // return $result;
-
+    return $result;
 }
 }
 
