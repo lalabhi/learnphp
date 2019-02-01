@@ -3,13 +3,22 @@ namespace Page;
 use Page\session;
 use Page\User;
 use Page\DbConnect;
+use Page\Templates;
 require 'vendor/autoload.php';
+$limit = 2;  
+if (isset($_GET["page"])) { $page  = $_GET["page"]; } else { $page=1; };  
+$start_from = ($page-1) * $limit;  
 
 // spl_autoload_register(function ($class_name) {
 //      include $class_name . '.php';
 //  });
+
 error_reporting(E_ALL); ini_set('display_errors', 1);
 $obj= new session();
+$tb= new Templates();
+if(!isset($_SESSION["currentPage"]))
+$_SESSION["currentPage"] = 0;   
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,7 +80,6 @@ if($check){
 <!-- filtering Part-->
 <div class="container">
 <form class="checkbox" method ="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-  <input type="radio" name="filter" value="#" >Show All<br>
   <input type="radio" name="filter" value="admin"> Show Admin<br>
   <input type="radio" name="filter" value="member"> Show members  
   <br><button class="btn btn-info">showdata</button>
@@ -83,56 +91,23 @@ if($check){
     //checking if post is happening
     if(isset($_POST['filter'])){   
     if($_POST['filter'] == 'admin') {
-        $result = $obj2->showroledata($_POST['filter']);
+
+        $result = $obj2->showroledata($_POST['filter'],$start_from,$limit);
+        $tb->createtable($result);
     }
     else if($_POST['filter'] == 'member') {
-        $result = $obj2->showroledata($_POST['filter']);
+        $result = $obj2->showroledata($_POST['filter'],$start_from,$limit);
+        $tb->createtable($result);
     }
+}
     else{
-        $result = $obj2->showalldata();   
+        $result = $obj2->showalldata($start_from,$limit); 
+        $tb->createtable($result);
     }
+
+
 }
-if(isset($result)){
-echo"<br> <br> <br>";
-echo'<div class="container">';
-echo '<table  class="table table-striped">';
-
-echo "<tr> <th>u_id</th> <th>Name</th> <th>Email</th> <th>Phoneno</th> <th>active</th> <th>roles</th> <th>Update</th></tr>";
-while($row = mysqli_fetch_array( $result )) {
-
-
-
-    // echo out the contents of each row into a table
-    
-    echo "<tr>";
-    
-    echo '<td>' . $row['u_id'] . '</td>';
-    
-    echo '<td>' . $row['fname'] . '</td>';
-    
-    echo '<td>' . $row['email'] . '</td>';
-
-    echo '<td>' . $row['phoneno'] . '</td>';
-
-    echo '<td>'.$row['active']. '</td>';
-
-    echo '<td>' . $row['roles'] . '</td>';
-    
-    echo '<td><a href="edit.php?u_id=' . $row['u_id']. '">Edit</a></td>';//creating the link to edit each and every user
-    
-    echo "</tr>";
-    
-    }
-    
-    
-    
-    // close table>
-    
-    echo "</table>";
-    echo "</div>";
-}
-}
-    ?>
+?>
 </body>
 <!--function for create the form div for deleting the user-->
 <script>
@@ -143,3 +118,16 @@ while($row = mysqli_fetch_array( $result )) {
   }
 </script>
 </html>
+
+<?php
+
+$total_records=$obj2->getCount();
+  
+$total_pages = ceil($total_records / $limit);  
+$pagLink = '<div class="pagination">';  
+for ($i=1; $i<=$total_pages; $i++) {  
+             $pagLink .= "<a href='welcome.php?page=".$i."'>".$i."</a>";  
+};  
+echo $pagLink . "</div>";  
+
+?>

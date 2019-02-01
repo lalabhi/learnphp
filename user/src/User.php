@@ -178,18 +178,18 @@ function deleteusr($email) {
       }
 }
 //shows all the data
-function showalldata(){
+function showalldata($start_from,$limit){
     $db= new DbConnect();
     $conn= $db->conn;
-    $sql="SELECT * FROM details";
+    $sql="SELECT * FROM details LIMIT $start_from,$limit";
     $result=mysqli_query($conn,$sql);
     return $result;
 }
 //shows data who has a role
-function showroledata($role){
+function showroledata($role,$start_from,$limit){
     $db= new DbConnect();
     $conn= $db->conn;
-    $sql="SELECT * FROM details WHERE roles='$role'";
+    $sql="SELECT * FROM details WHERE roles='$role' LIMIT $start_from,$limit";
     $result=mysqli_query($conn,$sql);
     return $result;
 }
@@ -212,6 +212,18 @@ function updateusr($u_id,$fname, $email, $phone, $roles, $active){
     $result= mysqli_query($conn, $sql);
     return $result;
 }
+
+public function getCount()
+{
+    $db= new DbConnect();
+    $conn= $db->conn;
+    $sql = "SELECT COUNT(*) as total FROM details";  
+    $result= mysqli_query($conn, $sql);
+    $row = mysqli_fetch_row($result);
+    $total_records = $row[0];  
+    return $total_records;
+}
+
 }
 
 ?>
